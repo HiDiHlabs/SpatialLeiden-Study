@@ -1,0 +1,12 @@
+name: spatial_libd
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconductor-spatiallibd=1.12
+  - r-tidyverse
+  - r-irkernel
+  - ca-certificates
+  - openssl
+  - r-dbplyr=2.3.4

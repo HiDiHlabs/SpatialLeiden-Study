@@ -1,0 +1,14 @@
+name: spatialleiden
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10.14
+  - pip:
+      - multispaeti==0.1.0
+      - scanpy[skmisc]==1.10.1
+      - squidpy==1.4.1
+      - matplotlib==3.8
+      - ipykernel
+      - pandas[excel]

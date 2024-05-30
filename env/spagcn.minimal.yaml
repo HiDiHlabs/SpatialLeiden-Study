@@ -1,0 +1,10 @@
+name: spagcn
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.8.18
+  - ipykernel
+  - pip:
+      - spagcn==1.2.7
