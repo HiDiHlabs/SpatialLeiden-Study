@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 def main():
     import argparse
     from pathlib import Path
@@ -21,34 +22,29 @@ def main():
         "--spatial_weight", help="Weight for spatial layer.", required=True, type=float
     )
     parser.add_argument(
-        "--log", help="Log transform counts (only image-based).", action="store_true"
+        "--mspca", help="Transform using MultispatiPCA.", action="store_true"
     )
     parser.add_argument(
-        "--mspca",
-        help="Transform using MultispatiPCA (only image-based).",
-        action="store_true",
+        "--neighbors", help="Neighbors, 'delaunay' or int.", required=False, default=4
     )
     parser.add_argument(
-        "--neighbors",
-        help="Neighbor method. (only used with image-based)",
-        required=False,
-    )
-    parser.add_argument(
-        "--n_pcs",
-        help="Neighbor method. (only used with --mspca)",
+        "--n_rings",
+        help="number of rings for grid. (only used with stereoseq)",
         required=False,
         type=int,
+        default=1,
+    )
+    parser.add_argument(
+        "--n_pcs", help="Number of components.", required=False, type=int
     )
     parser.add_argument(
         "--n_genes",
-        help="Neighbor method. (only used with stereoseq)",
+        help="Number of genes. (only used with stereoseq)",
         required=False,
         type=int,
     )
     parser.add_argument(
-        "--svg",
-        help="Random seed. (only used with stereoseq)",
-        action="store_true",
+        "--svg", help="Use SVG instead of HVG (only stereo-seq).", action="store_true"
     )
     parser.add_argument("--seed", help="Random seed.", required=True, type=int)
 
@@ -56,9 +52,11 @@ def main():
 
     import numpy as np
 
-    from leiden_utils import process_imagingbased, process_stereoseq
+    from utils import process_imagingbased, process_stereoseq
 
     np.random.seed(args.seed)
+
+    neighbors = args.neighbors if args.neighbors == "delaunay" else int(args.neighbors)
 
     if args.stereoseq:
         label_df = process_stereoseq(
@@ -68,16 +66,15 @@ def main():
             seed=args.seed,
             n_pcs=args.n_pcs,
             n_genes=args.n_genes,
+            n_neighs=neighbors,
+            n_rings=args.n_rings,
+            mspca=args.mspca,
         )
 
     else:
-        neighbors = (
-            args.neighbors if args.neighbors == "delaunay" else int(args.neighbors)
-        )
         label_df = process_imagingbased(
             path=args.h5ad,
             seed=args.seed,
-            log=args.log,
             msPCA=args.mspca,
             neighbors=neighbors,
             spatial_weight=args.spatial_weight,
